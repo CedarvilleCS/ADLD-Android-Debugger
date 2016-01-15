@@ -7,6 +7,7 @@ import edu.cedarville.adld.common.dagger.Components;
 import edu.cedarville.adld.common.dagger.component.AppComponent;
 import edu.cedarville.adld.common.dagger.component.DaggerAppComponent;
 import edu.cedarville.adld.common.dagger.module.AppModule;
+import timber.log.Timber;
 
 public class ADLDDebuggerApplication extends Application implements Components {
 
@@ -26,8 +27,11 @@ public class ADLDDebuggerApplication extends Application implements Components {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        Timber.plant(new Timber.DebugTree());
+
         this.appComponent = DaggerAppComponent.builder().
-                appModule(new AppModule())
+                appModule(new AppModule(this, this))
                 .build();
 
     }

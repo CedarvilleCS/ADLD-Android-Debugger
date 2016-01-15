@@ -13,8 +13,17 @@
     tools:showIn="@layout/activity_main"
     tools:context=".MainActivity">
 
+
     <TextView
-        android:text="Hello World!"
+        android:id="@+id/label_status"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        tools:text="Status: connected"/>
+
+    <TextView
+        android:id="@+id/label_input"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/label_status"
+        tools:text="Read in data"/>
 </RelativeLayout>

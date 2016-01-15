@@ -38,20 +38,36 @@ public class DataPoint {
     ////
     ////// Class Methods
     ////
-    public String getLeftSesnorHexValue() {
+    public String getLeftSensorHexValue() {
         return Integer.toHexString(leftSensor);
     }
 
-    public String getFrontSesnorHexValue() {
+    public String getFrontSensorHexValue() {
         return Integer.toHexString(frontSensor);
     }
 
-    public String getRightSesnorHexValue() {
+    public String getRightSensorHexValue() {
         return Integer.toHexString(rightSensor);
     }
 
-    public String getSonarSesnorHexValue() {
+    public String getSonarSensorHexValue() {
         return Integer.toHexString(sonarSensor);
+    }
+
+    public String getLeftSensorStringValue() {
+        return Integer.toString(leftSensor);
+    }
+
+    public String getFrontSensorStringValue() {
+        return Integer.toString(frontSensor);
+    }
+
+    public String getRightSensorStringValue() {
+        return Integer.toString(rightSensor);
+    }
+
+    public String getSonarSensorStringValue() {
+        return Integer.toString(sonarSensor);
     }
 
 

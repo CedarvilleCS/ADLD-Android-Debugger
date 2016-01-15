@@ -1,4 +1,20 @@
 <resources>
     <string name="app_name">ADLD Debugger</string>
+    
     <string name="action_settings">Settings</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
+    
+    <string name="status_connect_to_bluetooth">Connect to Device</string>
+    <string name="status_connecting_to_device">Connecting to Device</string>
+    <string name="status_connected_to_device">Connected to Device</string>
+    <string name="status_connection_to_device_failed">Connection to Device Failed</string>
+    <string name="status_bluetooth_not_available">Bluetooth is not available on this device</string>
+    
+    <string name="left_sensor">Left Sensor</string>
+    <string name="front_sensor">Front Sensor</string>
+    <string name="right_sensor">Right Sensor</string>
+    <string name="sonar_sensor">Sonar Sensor</string>
+
+
 </resources>

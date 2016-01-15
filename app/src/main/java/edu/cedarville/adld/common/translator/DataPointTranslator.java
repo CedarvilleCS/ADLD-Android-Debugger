@@ -1,5 +1,7 @@
 package edu.cedarville.adld.common.translator;
 
+import javax.inject.Inject;
+
 import edu.cedarville.adld.common.model.DataPoint;
 
 public class DataPointTranslator {
@@ -9,6 +11,11 @@ public class DataPointTranslator {
     private static final int RIGHT_SENSOR_POS = 2;
     private static final int SONAR_SENSOR_POS = 3;
     private static final int BASE_16 = 16;
+
+    @Inject
+    public DataPointTranslator() {
+        // Default Constructor for injection
+    }
 
     /**
      * Translates an input in hex format "AA,BB,CC,DD" into a DataPoint model
