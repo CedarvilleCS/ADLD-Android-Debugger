@@ -6,7 +6,7 @@ import edu.cedarville.adld.common.dagger.module.ChartModule;
 import edu.cedarville.adld.common.dagger.module.MainModule;
 import edu.cedarville.adld.common.dagger.scope.AppScope;
 import edu.cedarville.adld.module.console.ui.ChartFragment;
-import edu.cedarville.adld.module.main.ui.MainActivity;
+import edu.cedarville.adld.module.main.MainActivity;
 
 @AppScope
 @Component(

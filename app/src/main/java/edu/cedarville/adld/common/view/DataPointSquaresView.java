@@ -34,8 +34,8 @@ public class DataPointSquaresView extends LinearLayout {
      */
     public void setDataPoint(DataPoint dataPoint) {
         this.leftSensor.setText(dataPoint.getLeftSensorStringValue());
-        this.rightSensor.setText(dataPoint.getFrontSensorStringValue());
-        this.frontSensor.setText(dataPoint.getRightSensorStringValue());
+        this.frontSensor.setText(dataPoint.getFrontSensorStringValue());
+        this.rightSensor.setText(dataPoint.getRightSensorStringValue());
         this.sonarSensor.setText(dataPoint.getSonarSensorStringValue());
     }
 

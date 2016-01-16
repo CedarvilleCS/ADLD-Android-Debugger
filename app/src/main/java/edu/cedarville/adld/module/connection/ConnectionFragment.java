@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.connection.ui;
+package edu.cedarville.adld.module.connection;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -17,8 +17,9 @@ import edu.cedarville.adld.R;
 
 public class ConnectionFragment extends Fragment implements ConnectionViewInterface {
 
-    public interface ConnectionFragmentEventListener {
+    public interface ConnectionViewEventListener {
         void onConnectBluetoothPressed();
+        void onViewDestroyed();
     }
 
     @Bind(R.id.layout_bluetooth_status)
@@ -30,7 +31,7 @@ public class ConnectionFragment extends Fragment implements ConnectionViewInterf
     @Bind(R.id.label_bluetooth_status)
     TextView statusLabel;
 
-    private ConnectionFragmentEventListener eventListener;
+    private ConnectionViewEventListener eventListener;
 
     @Nullable
     @Override
@@ -42,15 +43,22 @@ public class ConnectionFragment extends Fragment implements ConnectionViewInterf
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        this.eventListener.onViewDestroyed();
+    }
+
+    @Override
     public void onAttach(Context context) {
         try {
             super.onAttach(context);
-            this.eventListener = (ConnectionFragmentEventListener) getActivity();
+            this.eventListener = (ConnectionViewEventListener) getActivity();
         } catch (ClassCastException e) {
-            throw new IllegalStateException("ConnectionFragment's host activity must implement ConnectionFragmentEventListener");
+            throw new IllegalStateException("ConnectionFragment's host activity must implement ConnectionViewEventListener");
         }
-
     }
+
+
 
     ////
     ////// ButterKnife Event Injections
@@ -84,7 +92,7 @@ public class ConnectionFragment extends Fragment implements ConnectionViewInterf
     @Override
     public void setStatusConnected(String name) {
         this.statusImage.setImageResource(R.drawable.ic_bluetooth_connected_black_48dp);
-        this.statusLabel.setText(R.string.status_connected_to_device);
+        this.statusLabel.setText(String.format("Connected to %s!", name));
     }
 
     @Override

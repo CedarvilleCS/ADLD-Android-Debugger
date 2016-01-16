@@ -1,7 +1,9 @@
 package edu.cedarville.adld.module.console.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,22 +11,17 @@ import android.view.ViewGroup;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.LineData;
 
-import javax.inject.Inject;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
-import edu.cedarville.adld.common.base.BaseFragment;
-import edu.cedarville.adld.common.dagger.Components;
 import edu.cedarville.adld.common.model.DataPoint;
 import edu.cedarville.adld.common.view.DataPointSquaresView;
-import edu.cedarville.adld.module.console.presenter.ChartEventHandler;
 
-public class ChartFragment extends BaseFragment implements ChartViewInterface {
+public class ChartFragment extends Fragment implements ChartViewInterface {
 
-
-    @Inject
-    ChartEventHandler eventHandler;
+    public interface ChartViewEventListener {
+        void onChartViewDestroyed();
+    }
 
     @Bind(R.id.line_chart)
     LineChart lineChart;
@@ -32,6 +29,7 @@ public class ChartFragment extends BaseFragment implements ChartViewInterface {
     @Bind(R.id.data_point_square_view)
     DataPointSquaresView dataPointView;
 
+    private ChartViewEventListener eventListener;
 
     @Nullable
     @Override
@@ -39,18 +37,26 @@ public class ChartFragment extends BaseFragment implements ChartViewInterface {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
 
-        this.setupActivityComponent(components());
-        this.eventHandler.attachView(this);
-        this.eventHandler.requestViewUpdate();
+
 
         return view;
     }
 
     @Override
-    protected void setupActivityComponent(Components components) {
-        components.getAppComponent().inject(this);
+    public void onDestroyView() {
+        super.onDestroyView();
+        this.eventListener.onChartViewDestroyed();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        try {
+            super.onAttach(context);
+            this.eventListener = (ChartViewEventListener) getActivity();
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("ChartFragment's host activity must implement ChartViewEventListener");
+        }
+    }
 
     ////
     ////// Chart View Interface

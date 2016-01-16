@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.main.ui;
+package edu.cedarville.adld.module.main;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,29 +15,25 @@ import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.inject.Inject;
-
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
 import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
-import edu.cedarville.adld.common.base.BaseActivity;
-import edu.cedarville.adld.common.dagger.Components;
+import edu.cedarville.adld.common.model.DataPoint;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
-import edu.cedarville.adld.module.connection.ui.ConnectionFragment;
+import edu.cedarville.adld.common.translator.DataPointTranslator;
+import edu.cedarville.adld.module.connection.ConnectionFragment;
+import edu.cedarville.adld.module.connection.ConnectionViewInterface;
 import edu.cedarville.adld.module.console.ui.ChartFragment;
-import edu.cedarville.adld.module.main.presenter.MainEventHandler;
+import edu.cedarville.adld.module.console.ui.ChartViewInterface;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import timber.log.Timber;
 
-public class MainActivity extends BaseActivity implements
-        ConnectionFragment.ConnectionFragmentEventListener {
-
-    @Inject
-    MainEventHandler eventHandler;
+public class MainActivity extends AppCompatActivity implements
+        ConnectionFragment.ConnectionViewEventListener,
+        ChartFragment.ChartViewEventListener {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -44,10 +41,12 @@ public class MainActivity extends BaseActivity implements
     @Bind(R.id.frame_main)
     FrameLayout mainFrame;
 
+    private DataPointTranslator translator;
     private Menu menu;
     private BluetoothSPP bt;
 
-    private ConnectionFragment connectionFragment;
+    private ConnectionViewInterface connectionView;
+    private ChartViewInterface chartView;
 
 
     @Override
@@ -60,36 +59,35 @@ public class MainActivity extends BaseActivity implements
 
         this.showConnectionFragment();
 
+        this.translator = new DataPointTranslator();
         this.bt = new BluetoothSPP(this);
         if(!bt.isBluetoothAvailable()) {
-            this.connectionFragment.setStatusNotAvailable();
+            this.connectionView.setStatusNotAvailable();
         }
 
 
         bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
             public void onDataReceived(byte[] data, String message) {
-//                textRead.append(message + "\n");
+                DataPoint dataPoint = translator.translateInputToDataPoint(message);
+                chartView.setIncomingDataPoint(dataPoint);
             }
         });
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
             public void onDeviceDisconnected() {
-                connectionFragment.setStatusDisconnected();
-                Timber.e("Status : Not connect");
                 menu.clear();
-                getMenuInflater().inflate(R.menu.menu_connection, menu);
+                showConnectionFragment();
+                Toast.makeText(MainActivity.this, "Device Disconnected!", Toast.LENGTH_SHORT).show();
+
             }
 
             public void onDeviceConnectionFailed() {
-                connectionFragment.setStatusConnectionFailed();
-                connectionFragment.setClickableEnabled(true);
-                Timber.e("Status : Connection failed");
+                connectionView.setStatusConnectionFailed();
+                connectionView.setClickableEnabled(true);
             }
 
             public void onDeviceConnected(String name, String address) {
-                connectionFragment.setStatusConnected(name);
-                Timber.e("Status : Connected to " + name);
-
+                connectionView.setStatusConnected(name);
                 Observable.timer(1500, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new OnNextSubscriber<Long>() {
@@ -103,7 +101,6 @@ public class MainActivity extends BaseActivity implements
                 getMenuInflater().inflate(R.menu.menu_disconnection, menu);
             }
         });
-
     }
 
     @Override
@@ -128,72 +125,95 @@ public class MainActivity extends BaseActivity implements
     }
 
     @Override
-    protected void setupActivityComponent(Components components) {
-        components.getAppComponent().inject(this);
+    public void onBackPressed() {
+        if (chartView != null) {
+            this.bt.disconnect();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
-        getMenuInflater().inflate(R.menu.menu_connection, menu);
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if(id == R.id.menu_device_connect) {
-            bt.setDeviceTarget(BluetoothState.DEVICE_OTHER);
-			/*
-			if(bt.getServiceState() == BluetoothState.STATE_CONNECTED)
-    			bt.disconnect();*/
-            Intent intent = new Intent(getApplicationContext(), DeviceList.class);
-            startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
-        } else if(id == R.id.menu_disconnect) {
-            if(bt.getServiceState() == BluetoothState.STATE_CONNECTED)
-                bt.disconnect();
+        switch (item.getItemId()) {
+            case R.id.menu_disconnect:
+                if(bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
+                    bt.disconnect();
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
         }
-        return super.onOptionsItemSelected(item);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Called from Selecting a device from DeviceListActivity
         if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
-            if(resultCode == Activity.RESULT_OK)
-                connectionFragment.setStatusConnecting();
+            if(resultCode == Activity.RESULT_OK) {
+                connectionView.setStatusConnecting();
                 bt.connect(data);
+            } else {
+                connectionView.setClickableEnabled(true);
+            }
+
+        // Called when returning from enabling Bluetooth
         } else if(requestCode == BluetoothState.REQUEST_ENABLE_BT) {
             if(resultCode == Activity.RESULT_OK) {
                 bt.setupService();
                 bt.startService(BluetoothState.DEVICE_ANDROID);
             } else {
-                Toast.makeText(getApplicationContext()
-                        , "Bluetooth was not enabled."
-                        , Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Bluetooth was not enabled.", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
     }
 
+
     ////
-    ////// Connection Fragment Event Listener
+    ////// Connection View Event Listener
     ////
     @Override
     public void onConnectBluetoothPressed() {
-        this.connectionFragment.setClickableEnabled(false);
+        this.connectionView.setClickableEnabled(false);
         this.bt.setDeviceTarget(BluetoothState.DEVICE_OTHER);
 
         Intent intent = new Intent(getApplicationContext(), DeviceList.class);
         startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
     }
 
+    @Override
+    public void onViewDestroyed() {
+        this.connectionView = null;
+    }
+
+
+    ////
+    ////// Chart View Event Listener
+    ////
+    @Override
+    public void onChartViewDestroyed() {
+        this.chartView = null;
+    }
+
+
     ////
     ////// Class Methods
     ////
     public void showConnectionFragment() {
-        this.connectionFragment = new ConnectionFragment();
+        ConnectionFragment connectionFragment = new ConnectionFragment();
+        this.connectionView = connectionFragment;
         this.replaceFragment(connectionFragment);
     }
 
     public void showChartFragment() {
-        this.replaceFragment(new ChartFragment());
+        ChartFragment chartFragment = new ChartFragment();
+        this.chartView = chartFragment;
+        this.replaceFragment(chartFragment);
     }
 
     public void replaceFragment(Fragment fragment) {

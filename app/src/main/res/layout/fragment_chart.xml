@@ -4,17 +4,19 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/line_chart"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
 
     <edu.cedarville.adld.common.view.DataPointSquaresView
         android:id="@+id/data_point_square_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/line_chart"/>
+        android:layout_alignParentBottom="true"/>
+
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/line_chart"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/data_point_square_view"/>
 
 
 </RelativeLayout>

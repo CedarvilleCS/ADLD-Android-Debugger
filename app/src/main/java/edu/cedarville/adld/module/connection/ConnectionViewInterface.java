@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.connection.ui;
+package edu.cedarville.adld.module.connection;
 
 public interface ConnectionViewInterface {
 

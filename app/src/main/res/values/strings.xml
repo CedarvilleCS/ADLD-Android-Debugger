@@ -5,9 +5,9 @@
     <string name="action_connect">Connect</string>
     <string name="action_disconnect">Disconnect</string>
     
-    <string name="status_connect_to_bluetooth">Connect to Device</string>
-    <string name="status_connecting_to_device">Connecting to Device</string>
-    <string name="status_connected_to_device">Connected to Device</string>
+    <string name="status_connect_to_bluetooth">Select Bluetooth Device</string>
+    <string name="status_connecting_to_device">Connecting to Device…</string>
+    <string name="status_connected_to_device">Device Connected!</string>
     <string name="status_connection_to_device_failed">Connection to Device Failed</string>
     <string name="status_bluetooth_not_available">Bluetooth is not available on this device</string>
     
