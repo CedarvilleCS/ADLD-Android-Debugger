@@ -1,5 +1,7 @@
 package edu.cedarville.adld.common.translator;
 
+import java.util.List;
+
 import edu.cedarville.adld.common.model.DataPoint;
 
 public class DataPointTranslator {
@@ -22,30 +24,41 @@ public class DataPointTranslator {
      * @param input -   Input from the robot
      * @return  -   DataPoint model representing the input
      */
-    public DataPoint translateInputToDataPoint(String input) {
-        String[] values = input.split(",");
+    public DataPoint translateInputToDataPoint(List<String> input) {
+        // Parse each hex value into an integer value
+        int left = 0;
+        int front = 0;
+        int right = 0;
+        int sonar = 0;
 
-        // Currently, all inputs must have 4 values and will always have 4 value
-        if (values.length != 4) {
-            throw new IllegalArgumentException("An input with " + values.length + " values was received. Inputs must have 4 values separated by commas");
+
+        for (String msg : input) {
+            String[] values = msg.split(",");
+
+            // Currently, all inputs must have 4 values and will always have 4 value
+            if (values.length != 4) {
+                throw new IllegalArgumentException("An input with " + values.length + " values was received. Inputs must have 4 values separated by commas");
+            }
+
+            // Parse each hex value into an integer value
+            left += Integer.parseInt(values[LEFT_SENSOR_POS], BASE_16);
+            front += Integer.parseInt(values[FRONT_SENSOR_POS], BASE_16);
+            right += Integer.parseInt(values[RIGHT_SENSOR_POS], BASE_16);
+            sonar += Integer.parseInt(values[SONAR_SENSOR_POS], BASE_16);
         }
 
-        // Parse each hex value into an integer value
-        int left = Integer.parseInt(values[LEFT_SENSOR_POS], BASE_16);
-        int front = Integer.parseInt(values[FRONT_SENSOR_POS], BASE_16);
-        int right = Integer.parseInt(values[RIGHT_SENSOR_POS], BASE_16);
-        int sonar = Integer.parseInt(values[SONAR_SENSOR_POS], BASE_16);
 
         // Build and return a DataPoint model with int values
         DataPoint dataPoint = new DataPoint.Builder()
                 .withIndex(index)
-                .withLeftSensor(left)
-                .withFrontSensor(front)
-                .withRightSensor(right)
-                .withSonarSensor(sonar)
+                .withLeftSensor(left / input.size())
+                .withFrontSensor(front / input.size())
+                .withRightSensor(right / input.size())
+                .withSonarSensor(sonar / input.size())
                 .build();
 
         this.index += 1;
         return dataPoint;
     }
+
 }

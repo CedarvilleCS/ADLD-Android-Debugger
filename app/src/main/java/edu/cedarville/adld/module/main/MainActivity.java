@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.squareup.otto.Subscribe;
+
 import java.util.concurrent.TimeUnit;
 
 import app.akexorcist.bluetotohspp.library.BluetoothSPP;
@@ -21,14 +23,21 @@ import app.akexorcist.bluetotohspp.library.DeviceList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
+import edu.cedarville.adld.common.manager.SharedPreferencesManager;
 import edu.cedarville.adld.common.model.DataPoint;
+import edu.cedarville.adld.common.otto.BusManager;
+import edu.cedarville.adld.common.otto.RunningAverageChangeEvent;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
+import edu.cedarville.adld.common.rx.StringListToDataPointMap;
 import edu.cedarville.adld.common.translator.DataPointTranslator;
-import edu.cedarville.adld.module.connection.ConnectionFragment;
-import edu.cedarville.adld.module.connection.ConnectionViewInterface;
 import edu.cedarville.adld.module.chart.ChartFragment;
 import edu.cedarville.adld.module.chart.ChartViewInterface;
+import edu.cedarville.adld.module.connection.ConnectionFragment;
+import edu.cedarville.adld.module.connection.ConnectionViewInterface;
+import edu.cedarville.adld.module.setting.SettingsDialogFragment;
 import rx.Observable;
+import rx.Subscriber;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 
 public class MainActivity extends AppCompatActivity implements
@@ -48,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private ConnectionViewInterface connectionView;
     private ChartViewInterface chartView;
+    private Subscription incomingDataSubscription;
 
 
     @Override
@@ -58,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements
 
         setSupportActionBar(toolbar);
 
+        BusManager.getInstance().register(this);
+
         this.showConnectionFragment();
 
         this.translator = new DataPointTranslator();
@@ -66,13 +78,7 @@ public class MainActivity extends AppCompatActivity implements
             this.connectionView.setStatusNotAvailable();
         }
 
-
-        bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
-            public void onDataReceived(byte[] data, String message) {
-                DataPoint dataPoint = translator.translateInputToDataPoint(message);
-                chartView.setIncomingDataPoint(dataPoint);
-            }
-        });
+        this.onRunningAverageChanged(null);
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
 
@@ -81,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements
 
             public void onDeviceDisconnected() {
                 menu.clear();
+                getMenuInflater().inflate(R.menu.menu_main, menu);
                 showConnectionFragment();
                 Toast.makeText(MainActivity.this, "Device Disconnected!", Toast.LENGTH_SHORT).show();
             }
@@ -110,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
                         });
 
                 menu.clear();
-                getMenuInflater().inflate(R.menu.menu_disconnection, menu);
+                getMenuInflater().inflate(R.menu.menu_chart, menu);
             }
         });
     }
@@ -118,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        BusManager.getInstance().unregister(this);
         bt.disconnect();
         bt.stopService();
     }
@@ -147,15 +155,20 @@ public class MainActivity extends AppCompatActivity implements
 
     public boolean onCreateOptionsMenu(Menu menu) {
         this.menu = menu;
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_disconnect:
+            case R.id.action_disconnect:
                 if(bt.getServiceState() == BluetoothState.STATE_CONNECTED) {
                     bt.disconnect();
                 }
+                return true;
+
+            case R.id.action_settings:
+                new SettingsDialogFragment().show(getSupportFragmentManager(), "Settings");
                 return true;
 
             default:
@@ -184,6 +197,24 @@ public class MainActivity extends AppCompatActivity implements
                 finish();
             }
         }
+    }
+
+
+    ////
+    ////// Otto Bus Subscription
+    ////
+    @Subscribe
+    public void onRunningAverageChanged(RunningAverageChangeEvent event) {
+        if (incomingDataSubscription != null && !incomingDataSubscription.isUnsubscribed()) {
+            incomingDataSubscription.unsubscribe();
+        }
+
+        incomingDataSubscription = getIncomingDataPoints().subscribe(new OnNextSubscriber<DataPoint>() {
+            @Override
+            public void onNext(DataPoint dataPoint) {
+                chartView.setIncomingDataPoint(dataPoint);
+            }
+        });
     }
 
 
@@ -233,5 +264,23 @@ public class MainActivity extends AppCompatActivity implements
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(mainFrame.getId(), fragment, fragment.getClass().getSimpleName());
         transaction.commit();
+    }
+
+    private Observable<DataPoint> getIncomingDataPoints() {
+        SharedPreferencesManager manager = new SharedPreferencesManager(this);
+        int runningAverage = manager.getRunningAverage();
+
+        return Observable.create(new Observable.OnSubscribe<String>() {
+            @Override
+            public void call(final Subscriber<? super String> subscriber) {
+                bt.setOnDataReceivedListener(new BluetoothSPP.OnDataReceivedListener() {
+                    public void onDataReceived(byte[] data, String message) {
+                        subscriber.onNext(message);
+                    }
+                });
+            }
+        })
+                .buffer(runningAverage)
+                .map(new StringListToDataPointMap(translator));
     }
 }
