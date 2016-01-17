@@ -15,6 +15,9 @@ package edu.cedarville.adld.common.model;
  */
 public class DataPoint {
 
+    /** Time the data point was received in relation to other received data points */
+    public final int index;
+
     /** Integer value of the left sensor for this data point */
     public final int leftSensor;
 
@@ -28,6 +31,7 @@ public class DataPoint {
     public final int sonarSensor;
 
     private DataPoint(Builder builder) {
+        index = builder.index;
         leftSensor = builder.leftSensor;
         frontSensor = builder.frontSensor;
         rightSensor = builder.rightSensor;
@@ -75,12 +79,18 @@ public class DataPoint {
     ////// Class Builder
     ////
     public static final class Builder {
+        private int index;
         private int leftSensor;
         private int frontSensor;
         private int rightSensor;
         private int sonarSensor;
 
         public Builder() {
+        }
+
+        public Builder withIndex(int val) {
+            index = val;
+            return this;
         }
 
         public Builder withLeftSensor(int val) {

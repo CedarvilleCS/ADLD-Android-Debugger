@@ -1,7 +1,5 @@
 package edu.cedarville.adld.common.translator;
 
-import javax.inject.Inject;
-
 import edu.cedarville.adld.common.model.DataPoint;
 
 public class DataPointTranslator {
@@ -12,8 +10,10 @@ public class DataPointTranslator {
     private static final int SONAR_SENSOR_POS = 3;
     private static final int BASE_16 = 16;
 
-    @Inject
+    private int index;
+
     public DataPointTranslator() {
+        index = 0;
         // Default Constructor for injection
     }
 
@@ -37,11 +37,15 @@ public class DataPointTranslator {
         int sonar = Integer.parseInt(values[SONAR_SENSOR_POS], BASE_16);
 
         // Build and return a DataPoint model with int values
-        return new DataPoint.Builder()
+        DataPoint dataPoint = new DataPoint.Builder()
+                .withIndex(index)
                 .withLeftSensor(left)
                 .withFrontSensor(front)
                 .withRightSensor(right)
                 .withSonarSensor(sonar)
                 .build();
+
+        this.index += 1;
+        return dataPoint;
     }
 }

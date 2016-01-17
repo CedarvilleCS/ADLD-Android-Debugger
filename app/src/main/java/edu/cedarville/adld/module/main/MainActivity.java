@@ -26,8 +26,8 @@ import edu.cedarville.adld.common.rx.OnNextSubscriber;
 import edu.cedarville.adld.common.translator.DataPointTranslator;
 import edu.cedarville.adld.module.connection.ConnectionFragment;
 import edu.cedarville.adld.module.connection.ConnectionViewInterface;
-import edu.cedarville.adld.module.console.ui.ChartFragment;
-import edu.cedarville.adld.module.console.ui.ChartViewInterface;
+import edu.cedarville.adld.module.chart.ChartFragment;
+import edu.cedarville.adld.module.chart.ChartViewInterface;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements
                 menu.clear();
                 showConnectionFragment();
                 Toast.makeText(MainActivity.this, "Device Disconnected!", Toast.LENGTH_SHORT).show();
-
             }
 
             public void onDeviceConnectionFailed() {

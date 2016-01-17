@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.console.ui;
+package edu.cedarville.adld.module.chart;
 
 import com.github.mikephil.charting.data.LineData;
 

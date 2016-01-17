@@ -22,11 +22,13 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/frame_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <!--<FrameLayout-->
+        <!--app:layout_behavior="@string/appbar_scrolling_view_behavior"-->
 
-    <!--<include layout="@layout/content_main"/>-->
+        <!--android:id="@+id/frame_main"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent" />-->
+
+    <include layout="@layout/content_main"/>
 
 </android.support.design.widget.CoordinatorLayout>

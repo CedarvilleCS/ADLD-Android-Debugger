@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
-
-
-    <edu.cedarville.adld.common.view.DataPointSquaresView
-        android:id="@+id/data_point_square_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
-
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingTop="8dp">
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/line_chart"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/data_point_square_view"/>
+        android:layout_height="0dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_weight="1"/>
+
+    <edu.cedarville.adld.common.view.DataPointSquaresView
+        android:id="@+id/data_point_square_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 
-</RelativeLayout>
+</LinearLayout>
