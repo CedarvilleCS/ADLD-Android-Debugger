@@ -21,7 +21,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.model.DataPoint;
+import edu.cedarville.adld.common.model.SensorActivation;
+import edu.cedarville.adld.common.model.SensorType;
 import edu.cedarville.adld.common.view.DataPointSquaresView;
+import rx.Subscription;
+import rx.functions.Action1;
 
 public class ChartFragment extends Fragment implements ChartViewInterface {
 
@@ -36,7 +40,12 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
     DataPointSquaresView dataPointView;
 
     private ChartViewEventListener eventListener;
+    private Subscription subscription;
 
+    private boolean leftActive;
+    private boolean frontActive;
+    private boolean rightActive;
+    private boolean sonarActive;
 
     @Nullable
     @Override
@@ -44,22 +53,13 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
 
-
         this.lineChart.setDescription("");
-        this.lineChart.setNoDataTextDescription("No data has been received");
-
-
+        this.lineChart.setNoDataText("No data to plot");
+        this.lineChart.setNoDataTextDescription("Select sensors to graph their data");
         this.lineChart.setDrawGridBackground(false);
-        this.lineChart.setMaxVisibleValueCount(100);
-
-
-//        this.leftSensorDataSet = new LineDataSet(new ArrayList<Entry>(), "Left Sensor");
-//        this.leftSensorDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-//        this.leftSensorDataSet.setColor(getResources().getColor(R.color.left_sensor_color));
-//        this.leftSensorDataSet.setCircleColor(getResources().getColor(R.color.left_sensor_color));
 
         // Set empty data
-        LineData data = new LineData();
+        final LineData data = new LineData();
         this.lineChart.setData(data);
 
 
@@ -70,11 +70,38 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
 
         // Modify Left Y-Axis
         YAxis leftAxis = lineChart.getAxisLeft();
+        leftAxis.setAxisMaxValue(275.0f);
         leftAxis.setDrawGridLines(true);
 
         // Remove Right Y-Axis
         YAxis rightAxis = lineChart.getAxisRight();
         rightAxis.setEnabled(false);
+
+        // Create all 4 data sets
+        data.addDataSet(createSet(SensorType.LEFT.name, SensorType.LEFT.colorId));
+        data.addDataSet(createSet(SensorType.FRONT.name, SensorType.FRONT.colorId));
+        data.addDataSet(createSet(SensorType.RIGHT.name, SensorType.RIGHT.colorId));
+        data.addDataSet(createSet(SensorType.SONAR.name, SensorType.SONAR.colorId));
+
+        this.subscription = dataPointView.getActiviationObservable().subscribe(new Action1<SensorActivation>() {
+            @Override
+            public void call(SensorActivation sensorActivation) {
+                switch (sensorActivation.type) {
+                    case LEFT:
+                        leftActive = sensorActivation.active;
+                        break;
+                    case FRONT:
+                        frontActive = sensorActivation.active;
+                        break;
+                    case RIGHT:
+                        rightActive = sensorActivation.active;
+                        break;
+                    case SONAR:
+                        sonarActive = sensorActivation.active;
+                        break;
+                }
+            }
+        });
 
         return view;
     }
@@ -83,6 +110,8 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
     public void onDestroyView() {
         super.onDestroyView();
         this.eventListener.onChartViewDestroyed();
+        this.subscription.unsubscribe();
+        this.subscription = null;
     }
 
     @Override
@@ -101,32 +130,41 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
     @Override
     public void setIncomingDataPoint(DataPoint dataPoint) {
         this.dataPointView.setDataPoint(dataPoint);
-        Entry entry = new Entry(dataPoint.leftSensor, dataPoint.index);
 
+        // Create graph entries for each data point
+        Entry leftEntry = new Entry(dataPoint.leftSensor, dataPoint.index);
+        Entry frontEntry = new Entry(dataPoint.frontSensor, dataPoint.index);
+        Entry rightEntry = new Entry(dataPoint.rightSensor, dataPoint.index);
+        Entry sonarEntry = new Entry(dataPoint.sonarSensor, dataPoint.index);
 
+        // Get the data object to update
         LineData data = lineChart.getData();
 
         if (data != null) {
-            LineDataSet set = data.getDataSetByIndex(0);
 
-            if (set == null) {
-                set = createSet();
-                data.addDataSet(set);
-            }
+            LineDataSet leftSet = data.getDataSetByLabel(SensorType.LEFT.name, true);
+            LineDataSet frontSet = data.getDataSetByLabel(SensorType.FRONT.name, true);
+            LineDataSet rightSet = data.getDataSetByLabel(SensorType.RIGHT.name, true);
+            LineDataSet sonarSet = data.getDataSetByLabel(SensorType.SONAR.name, true);
 
+            // Add the next index on the x axis
             data.addXValue(Integer.toString(dataPoint.index));
-            data.addEntry(entry, 0);
+
+            // Add DataPoints that are considered active
+            this.addEntryToData(leftActive, leftEntry, leftSet, data);
+            this.addEntryToData(frontActive, frontEntry, frontSet, data);
+            this.addEntryToData(rightActive, rightEntry, rightSet, data);
+            this.addEntryToData(sonarActive, sonarEntry, sonarSet, data);
 
             // inform chart of change
             lineChart.notifyDataSetChanged();
 
             // limit the number of visible entries
-            lineChart.setVisibleXRangeMaximum(120);
+            lineChart.setVisibleXRangeMaximum(20);
             // mChart.setVisibleYRange(30, AxisDependency.LEFT);
 
             // move to the latest entry
-            lineChart.moveViewToX(data.getXValCount() - 121);
-
+            lineChart.moveViewToX(data.getXValCount() - 21);
         }
     }
 
@@ -145,20 +183,26 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
     ////
     ////// Class Helper Methods
     ////
-    private LineDataSet createSet() {
-        LineDataSet set = new LineDataSet(null, "Left Sensor");
+    private LineDataSet createSet(String name, int colorId) {
+        LineDataSet set = new LineDataSet(null, name);
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        set.setColor(ColorTemplate.getHoloBlue());
-        set.setCircleColor(Color.WHITE);
+        set.setColor(getResources().getColor(colorId));
+        set.setCircleColor(getResources().getColor(colorId));
         set.setLineWidth(2f);
-        set.setCircleSize(4f);
-        set.setFillAlpha(65);
+        set.setCircleSize(2f);
+        set.setFillAlpha(85);
         set.setFillColor(ColorTemplate.getHoloBlue());
         set.setHighLightColor(Color.rgb(244, 117, 117));
         set.setValueTextColor(Color.WHITE);
         set.setValueTextSize(9f);
         set.setDrawValues(false);
         return set;
+    }
+
+    private void addEntryToData(boolean active, Entry entry, LineDataSet set, LineData data) {
+        if (set != null && active) {
+            data.addEntry(entry, data.getIndexOfDataSet(set));
+        }
     }
 
 }

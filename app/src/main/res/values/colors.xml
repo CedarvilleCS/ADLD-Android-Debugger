@@ -11,5 +11,8 @@
 
 
     <color name="left_sensor_color">#68228B</color>
+    <color name="front_sensor_color">#0000CD</color>
+    <color name="right_sensor_color">#A52A2A</color>
+    <color name="sonar_sensor_color">#FFD700</color>
 
 </resources>
