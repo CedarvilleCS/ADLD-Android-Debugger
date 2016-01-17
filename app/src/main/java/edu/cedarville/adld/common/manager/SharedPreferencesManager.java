@@ -19,6 +19,7 @@ public class SharedPreferencesManager {
     /* Preference Keys */
     private static final String PREF_TITLE = "edu.cedarville.adld";
     private static final String PREF_RUNNING_AVG = "PREF_RUNNING_AVG";
+    private static final String PREF_DISPLAY_HEX = "PREF_DISPLAY_HEX";
 
     private final SharedPreferences sharedPreferences;
 
@@ -30,8 +31,15 @@ public class SharedPreferencesManager {
         return sharedPreferences.getInt(PREF_RUNNING_AVG, 1);
     }
 
+    public boolean getDisplayHex() {
+        return sharedPreferences.getBoolean(PREF_DISPLAY_HEX, false);
+    }
+
     public void setRunningAverage(int runningAverage) {
         sharedPreferences.edit().putInt(PREF_RUNNING_AVG, runningAverage).apply();
     }
 
+    public void setDisplayHex(boolean displayHex) {
+        sharedPreferences.edit().putBoolean(PREF_DISPLAY_HEX, displayHex).apply();
+    }
 }

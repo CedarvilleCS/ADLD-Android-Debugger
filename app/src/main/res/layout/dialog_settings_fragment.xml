@@ -47,6 +47,12 @@
     </RadioGroup>
 
 
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/checkbox_hex"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/display_hex"/>
+
     <Button
         android:id="@+id/touch_done"
         android:layout_width="wrap_content"

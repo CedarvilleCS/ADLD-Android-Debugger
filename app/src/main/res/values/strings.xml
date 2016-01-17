@@ -25,5 +25,6 @@
     <string name="avg_5">5 (plots avg of 5 points)</string>
     <string name="avg_10">10 (plots avg of 10 points)</string>
     <string name="avg_100">100 (plots avg of 100 points)</string>
+    <string name="display_hex">Display sensor output in Hex</string>
 
 </resources>

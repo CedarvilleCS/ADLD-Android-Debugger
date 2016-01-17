@@ -44,6 +44,8 @@ public class DataPointSquaresView extends LinearLayout {
     @Bind(R.id.square_sonar_sensor)
     View squareSonar;
 
+    private boolean displayInHex;
+
     private BehaviorSubject<SensorActivation> sensorActiveSubject;
 
     public DataPointSquaresView(Context context, AttributeSet attrs) {
@@ -87,14 +89,18 @@ public class DataPointSquaresView extends LinearLayout {
      * @param dataPoint -   DataPoint which holds sensor values to display
      */
     public void setDataPoint(DataPoint dataPoint) {
-        this.leftSensor.setText(dataPoint.getLeftSensorStringValue());
-        this.frontSensor.setText(dataPoint.getFrontSensorStringValue());
-        this.rightSensor.setText(dataPoint.getRightSensorStringValue());
-        this.sonarSensor.setText(dataPoint.getSonarSensorStringValue());
+        this.leftSensor.setText(displayInHex ? dataPoint.getLeftSensorHexValue() : dataPoint.getLeftSensorStringValue());
+        this.frontSensor.setText(displayInHex ? dataPoint.getFrontSensorHexValue() : dataPoint.getFrontSensorStringValue());
+        this.rightSensor.setText(displayInHex ? dataPoint.getRightSensorHexValue() : dataPoint.getRightSensorStringValue());
+        this.sonarSensor.setText(displayInHex ? dataPoint.getSonarSensorHexValue() : dataPoint.getSonarSensorStringValue());
     }
 
-    public Observable<SensorActivation> getActiviationObservable() {
+    public Observable<SensorActivation> getActivationObservable() {
         return sensorActiveSubject.asObservable();
+    }
+
+    public void setDisplayInHex(boolean displayInHex) {
+        this.displayInHex = displayInHex;
     }
 
 

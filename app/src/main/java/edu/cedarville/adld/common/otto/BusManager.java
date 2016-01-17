@@ -29,4 +29,8 @@ public class BusManager {
     public void postRunningAverageChangeEvent() {
         bus.post(new RunningAverageChangeEvent());
     }
+
+    public void postDisplayHexChangeEvent() {
+        bus.post(new DisplayHexChangeEvent());
+    }
 }

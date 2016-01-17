@@ -3,6 +3,7 @@ package edu.cedarville.adld.module.setting;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.RadioGroup;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.manager.SharedPreferencesManager;
@@ -20,6 +22,9 @@ public class SettingsDialogFragment extends AppCompatDialogFragment {
 
     @Bind(R.id.radio_group)
     RadioGroup group;
+
+    @Bind(R.id.checkbox_hex)
+    AppCompatCheckBox hexCheckBox;
 
     private SharedPreferencesManager manager;
 
@@ -33,6 +38,7 @@ public class SettingsDialogFragment extends AppCompatDialogFragment {
         this.manager = new SharedPreferencesManager(getActivity());
 
         this.setSelectedAverage();
+        this.setHexChecked();
         this.setCheckListener();
 
         return view;
@@ -41,6 +47,12 @@ public class SettingsDialogFragment extends AppCompatDialogFragment {
     @OnClick(R.id.touch_done)
     void onDoneClicked() {
         getDialog().dismiss();
+    }
+
+    @OnCheckedChanged(R.id.checkbox_hex)
+    void onCheckHexChanged(boolean checked) {
+        manager.setDisplayHex(checked);
+        BusManager.getInstance().postDisplayHexChangeEvent();
     }
 
     private void setSelectedAverage() {
@@ -61,6 +73,11 @@ public class SettingsDialogFragment extends AppCompatDialogFragment {
             default:
                 break;
         }
+    }
+
+    private void setHexChecked() {
+        boolean checked = manager.getDisplayHex();
+        this.hexCheckBox.setChecked(checked);
     }
 
     private void setCheckListener() {

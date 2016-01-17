@@ -20,6 +20,7 @@ import com.github.mikephil.charting.utils.ColorTemplate;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
+import edu.cedarville.adld.common.manager.SharedPreferencesManager;
 import edu.cedarville.adld.common.model.DataPoint;
 import edu.cedarville.adld.common.model.SensorActivation;
 import edu.cedarville.adld.common.model.SensorType;
@@ -53,6 +54,9 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
         View view = inflater.inflate(R.layout.fragment_chart, container, false);
         ButterKnife.bind(this, view);
 
+        SharedPreferencesManager manager = new SharedPreferencesManager(getActivity());
+        this.dataPointView.setDisplayInHex(manager.getDisplayHex());
+
         this.lineChart.setDescription("");
         this.lineChart.setNoDataText("No data to plot");
         this.lineChart.setNoDataTextDescription("Select sensors to graph their data");
@@ -83,7 +87,7 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
         data.addDataSet(createSet(SensorType.RIGHT.name, SensorType.RIGHT.colorId));
         data.addDataSet(createSet(SensorType.SONAR.name, SensorType.SONAR.colorId));
 
-        this.subscription = dataPointView.getActiviationObservable().subscribe(new Action1<SensorActivation>() {
+        this.subscription = dataPointView.getActivationObservable().subscribe(new Action1<SensorActivation>() {
             @Override
             public void call(SensorActivation sensorActivation) {
                 switch (sensorActivation.type) {
@@ -169,15 +173,10 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
     }
 
     @Override
-    public void setChartLineData(LineData data) {
-        this.lineChart.setData(data);
+    public void setDisplayHex(boolean displayHex) {
+        this.dataPointView.setDisplayInHex(displayHex);
     }
 
-    @Override
-    public void refreshChart() {
-        this.lineChart.notifyDataSetChanged();
-        this.lineChart.invalidate();
-    }
 
 
     ////

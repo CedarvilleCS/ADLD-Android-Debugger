@@ -26,6 +26,7 @@ import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.manager.SharedPreferencesManager;
 import edu.cedarville.adld.common.model.DataPoint;
 import edu.cedarville.adld.common.otto.BusManager;
+import edu.cedarville.adld.common.otto.DisplayHexChangeEvent;
 import edu.cedarville.adld.common.otto.RunningAverageChangeEvent;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
 import edu.cedarville.adld.common.rx.StringListToDataPointMap;
@@ -217,6 +218,14 @@ public class MainActivity extends AppCompatActivity implements
         });
     }
 
+    @Subscribe
+    public void onDisplayHexChanged(DisplayHexChangeEvent event) {
+        boolean displayHex = new SharedPreferencesManager(this).getDisplayHex();
+        if (chartView != null) {
+            chartView.setDisplayHex(displayHex);
+        }
+    }
+
 
     ////
     ////// Connection View Event Listener
@@ -258,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements
         ChartFragment chartFragment = new ChartFragment();
         this.chartView = chartFragment;
         this.replaceFragment(chartFragment);
+
     }
 
     private void replaceFragment(Fragment fragment) {
