@@ -72,9 +72,9 @@ public class ConnectionFragment extends Fragment implements ConnectionViewInterf
     ////// Connection View Interface
     ////
     @Override
-    public void setStatusDisconnected() {
-        this.statusImage.setImageResource(R.drawable.ic_bluetooth_black_48dp);
-        this.statusLabel.setText(R.string.status_connect_to_bluetooth);
+    public void setStatusRetryConnection() {
+        this.statusImage.setImageResource(R.drawable.ic_bluetooth_searching_black_48dp);
+        this.statusLabel.setText(R.string.status_rety_connecting_to_device);
     }
 
     @Override

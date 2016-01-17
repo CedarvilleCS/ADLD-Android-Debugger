@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements
     private DataPointTranslator translator;
     private Menu menu;
     private BluetoothSPP bt;
+    private Intent connectionIntent;
 
     private ConnectionViewInterface connectionView;
     private ChartViewInterface chartView;
@@ -74,6 +75,10 @@ public class MainActivity extends AppCompatActivity implements
         });
 
         bt.setBluetoothConnectionListener(new BluetoothSPP.BluetoothConnectionListener() {
+
+            private int maxRetryCount = 2;
+            private int retryCount = 0;
+
             public void onDeviceDisconnected() {
                 menu.clear();
                 showConnectionFragment();
@@ -81,11 +86,19 @@ public class MainActivity extends AppCompatActivity implements
             }
 
             public void onDeviceConnectionFailed() {
-                connectionView.setStatusConnectionFailed();
-                connectionView.setClickableEnabled(true);
+                if (retryCount < maxRetryCount) {
+                    connectionView.setStatusRetryConnection();
+                    bt.connect(connectionIntent);
+                    retryCount++;
+                } else {
+                    connectionView.setStatusConnectionFailed();
+                    connectionView.setClickableEnabled(true);
+                }
             }
 
             public void onDeviceConnected(String name, String address) {
+                connectionIntent = null;
+                retryCount = 0;
                 connectionView.setStatusConnected(name);
                 Observable.timer(1500, TimeUnit.MILLISECONDS)
                         .observeOn(AndroidSchedulers.mainThread())
@@ -155,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements
         if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
             if(resultCode == Activity.RESULT_OK) {
                 connectionView.setStatusConnecting();
+                this.connectionIntent = data;
                 bt.connect(data);
             } else {
                 connectionView.setClickableEnabled(true);
@@ -203,19 +217,19 @@ public class MainActivity extends AppCompatActivity implements
     ////
     ////// Class Methods
     ////
-    public void showConnectionFragment() {
+    private void showConnectionFragment() {
         ConnectionFragment connectionFragment = new ConnectionFragment();
         this.connectionView = connectionFragment;
         this.replaceFragment(connectionFragment);
     }
 
-    public void showChartFragment() {
+    private void showChartFragment() {
         ChartFragment chartFragment = new ChartFragment();
         this.chartView = chartFragment;
         this.replaceFragment(chartFragment);
     }
 
-    public void replaceFragment(Fragment fragment) {
+    private void replaceFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(mainFrame.getId(), fragment, fragment.getClass().getSimpleName());
         transaction.commit();
