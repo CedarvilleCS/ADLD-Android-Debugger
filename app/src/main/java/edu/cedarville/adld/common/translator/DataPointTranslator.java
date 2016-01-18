@@ -33,7 +33,8 @@ public class DataPointTranslator {
 
 
         for (String msg : input) {
-            String[] values = msg.split(",");
+            String stripped = msg.substring(1, msg.length());
+            String[] values = stripped.trim().split(",");
 
             // Currently, all inputs must have 4 values and will always have 4 value
             if (values.length != 4) {

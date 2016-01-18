@@ -38,6 +38,10 @@ public class DataPoint {
         sonarSensor = builder.sonarSensor;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Values: %d, %d, %d, %d", leftSensor, frontSensor, rightSensor, sonarSensor);
+    }
 
     ////
     ////// Class Methods

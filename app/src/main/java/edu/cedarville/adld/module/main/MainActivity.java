@@ -28,6 +28,7 @@ import edu.cedarville.adld.common.model.DataPoint;
 import edu.cedarville.adld.common.otto.BusManager;
 import edu.cedarville.adld.common.otto.DisplayHexChangeEvent;
 import edu.cedarville.adld.common.otto.RunningAverageChangeEvent;
+import edu.cedarville.adld.common.rx.EmptyStringsFilter;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
 import edu.cedarville.adld.common.rx.StringListToDataPointMap;
 import edu.cedarville.adld.common.translator.DataPointTranslator;
@@ -213,7 +214,9 @@ public class MainActivity extends AppCompatActivity implements
         incomingDataSubscription = getIncomingDataPoints().subscribe(new OnNextSubscriber<DataPoint>() {
             @Override
             public void onNext(DataPoint dataPoint) {
-                chartView.setIncomingDataPoint(dataPoint);
+                if (chartView != null ) {
+                    chartView.setIncomingDataPoint(dataPoint);
+                }
             }
         });
     }
@@ -290,6 +293,7 @@ public class MainActivity extends AppCompatActivity implements
                 });
             }
         })
+                .filter(new EmptyStringsFilter())
                 .buffer(runningAverage)
                 .map(new StringListToDataPointMap(translator));
     }
