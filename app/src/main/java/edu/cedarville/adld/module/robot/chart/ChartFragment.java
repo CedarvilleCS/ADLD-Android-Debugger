@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.chart;
+package edu.cedarville.adld.module.robot.chart;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -32,6 +32,7 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
 
     public interface ChartViewEventListener {
         void onChartViewDestroyed();
+        void onChartViewCreated(ChartViewInterface view);
     }
 
     @Bind(R.id.line_chart)
@@ -107,6 +108,8 @@ public class ChartFragment extends Fragment implements ChartViewInterface {
             }
         });
 
+
+        this.eventListener.onChartViewCreated(this);
         return view;
     }
 

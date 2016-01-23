@@ -107,7 +107,7 @@ public class SettingsDialogFragment extends AppCompatDialogFragment {
                         default:
                             break;
                     }
-                    BusManager.getInstance().postRunningAverageChangeEvent();
+                    BusManager.getInstance().postRunningAverageChangeEvent(manager.getRunningAverage());
                 }
             }
         });
