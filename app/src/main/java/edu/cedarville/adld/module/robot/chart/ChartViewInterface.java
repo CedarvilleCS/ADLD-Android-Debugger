@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.chart;
+package edu.cedarville.adld.module.robot.chart;
 
 import edu.cedarville.adld.common.model.DataPoint;
 

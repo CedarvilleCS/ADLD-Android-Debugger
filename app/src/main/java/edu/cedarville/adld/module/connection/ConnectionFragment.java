@@ -19,7 +19,8 @@ public class ConnectionFragment extends Fragment implements ConnectionViewInterf
 
     public interface ConnectionViewEventListener {
         void onConnectBluetoothPressed();
-        void onViewDestroyed();
+        void onConnectionViewCreated(ConnectionViewInterface view);
+        void onConnectionViewDestroyed();
     }
 
     @Bind(R.id.layout_bluetooth_status)
@@ -39,13 +40,14 @@ public class ConnectionFragment extends Fragment implements ConnectionViewInterf
         View view = inflater.inflate(R.layout.fragment_connection, container, false);
         ButterKnife.bind(this, view);
 
+        this.eventListener.onConnectionViewCreated(this);
         return view;
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        this.eventListener.onViewDestroyed();
+        this.eventListener.onConnectionViewDestroyed();
     }
 
     @Override

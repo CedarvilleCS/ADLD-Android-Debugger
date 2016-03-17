@@ -26,8 +26,8 @@ public class BusManager {
         bus.unregister(obj);
     }
 
-    public void postRunningAverageChangeEvent() {
-        bus.post(new RunningAverageChangeEvent());
+    public void postRunningAverageChangeEvent(int avg) {
+        bus.post(new RunningAverageChangeEvent(avg));
     }
 
     public void postDisplayHexChangeEvent() {
