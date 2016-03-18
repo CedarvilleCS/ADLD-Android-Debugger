@@ -21,6 +21,7 @@ import edu.cedarville.adld.common.model.ConsoleOutput;
 import edu.cedarville.adld.module.robot.console.ConsoleFragment;
 import edu.cedarville.adld.module.robot.console.ConsoleView;
 import edu.cedarville.adld.module.robot.shared.presenter.RobotDebuggerEventHandler;
+import timber.log.Timber;
 
 public class RobotDebuggerActivity extends BaseActivity implements
         RobotDebuggerView,

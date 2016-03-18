@@ -17,6 +17,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.model.ConsoleOutput;
+import timber.log.Timber;
 
 /**
  * ConsoleFragment.java

@@ -45,6 +45,7 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
     @Override
     public void attachView(RobotDebuggerView view) {
         this.view = view;
+        this.view.switchToConsoleView();
     }
 
     @Override
