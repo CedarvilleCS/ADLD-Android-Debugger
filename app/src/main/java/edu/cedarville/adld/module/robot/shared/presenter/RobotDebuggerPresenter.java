@@ -1,5 +1,9 @@
 package edu.cedarville.adld.module.robot.shared.presenter;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import javax.inject.Inject;
 
 import edu.cedarville.adld.common.dagger.Components;
@@ -86,7 +90,6 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
             this.sensorDataSubscription = this.robot.getSensorsDataObservable().subscribe(new OnNextSubscriber<SensorData>() {
                 @Override
                 public void onNext(SensorData sensorData) {
-                    Timber.e("Sensor Data: %s", sensorData.getOutputAsHex());
                     view.printOutput(new ConsoleOutput(sensorData.getOutputAsHex()));
                 }
             });
@@ -112,5 +115,9 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
 
     private void adjustViewPlayPauseState() {
         this.view.setStatePlaying(isObservingRobotSensorData());
+        DateTime now = new DateTime();
+        DateTimeFormatter fmt = DateTimeFormat.fullTime();
+        String res = String.format((isObservingRobotSensorData() ? "PLAY " : "PAUSE") + "\n%s" , now.toString(fmt));
+        this.view.printOutput(new ConsoleOutput(res));
     }
 }
