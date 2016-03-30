@@ -6,8 +6,8 @@ import dagger.Module;
 import dagger.Provides;
 import edu.cedarville.adld.common.dagger.Components;
 import edu.cedarville.adld.common.dagger.scopes.AppScope;
-import edu.cedarville.adld.module.main.presenter.MainEventHandler;
-import edu.cedarville.adld.module.main.presenter.MainPresenter;
+import edu.cedarville.adld.module.connection.presenter.ConnectionEventHandler;
+import edu.cedarville.adld.module.connection.presenter.ConnectionPresenter;
 
 @Module
 public class AppModule {
@@ -34,7 +34,7 @@ public class AppModule {
 
     @Provides
     @AppScope
-    public MainEventHandler providesMainEventHandler(MainPresenter presenter) {
+    public ConnectionEventHandler providesMainEventHandler(ConnectionPresenter presenter) {
         return presenter;
     }
 }

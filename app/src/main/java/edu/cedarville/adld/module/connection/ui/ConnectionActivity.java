@@ -1,13 +1,13 @@
-package edu.cedarville.adld.module.main.ui;
+package edu.cedarville.adld.module.connection.ui;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.widget.FrameLayout;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import javax.inject.Inject;
@@ -16,22 +16,20 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 import app.akexorcist.bluetotohspp.library.DeviceList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.base.BaseActivity;
 import edu.cedarville.adld.common.dagger.Components;
-import edu.cedarville.adld.module.connection.ConnectionFragment;
-import edu.cedarville.adld.module.connection.ConnectionViewInterface;
-import edu.cedarville.adld.module.main.presenter.MainEventHandler;
+import edu.cedarville.adld.module.connection.presenter.ConnectionEventHandler;
 
-public class MainActivity extends BaseActivity implements MainView,
-        ConnectionFragment.ConnectionViewEventListener {
+public class ConnectionActivity extends BaseActivity implements ConnectionView {
 
 
     //------------------------------------------------------------------------------
     // Dependencies
     //------------------------------------------------------------------------------
     @Inject
-    MainEventHandler eventHandler;
+    ConnectionEventHandler eventHandler;
 
 
     //------------------------------------------------------------------------------
@@ -40,14 +38,14 @@ public class MainActivity extends BaseActivity implements MainView,
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.frame_main)
-    FrameLayout mainFrame;
+    @Bind(R.id.layout_bluetooth_status)
+    View statusLayout;
 
+    @Bind(R.id.img_bluetooth_status)
+    ImageView statusImage;
 
-    //------------------------------------------------------------------------------
-    // Variables
-    //------------------------------------------------------------------------------
-    private ConnectionViewInterface connectionView;
+    @Bind(R.id.label_bluetooth_status)
+    TextView statusLabel;
 
 
     //------------------------------------------------------------------------------
@@ -56,13 +54,11 @@ public class MainActivity extends BaseActivity implements MainView,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_connection);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
         this.eventHandler.attachView(this);
-
-        this.replaceFragment(new ConnectionFragment());
     }
 
     @Override
@@ -87,6 +83,15 @@ public class MainActivity extends BaseActivity implements MainView,
     }
 
 
+    //------------------------------------------------------------------------------
+    // ButterKnife Event Injections
+    //------------------------------------------------------------------------------
+    @OnClick (R.id.layout_bluetooth_status)
+    void onBluetoothStatusClicked() {
+        this.onConnectBluetoothPressed();
+    }
+
+
 
     //------------------------------------------------------------------------------
     // Activity Intent Results
@@ -97,7 +102,7 @@ public class MainActivity extends BaseActivity implements MainView,
             if(resultCode == Activity.RESULT_OK) {
                 this.eventHandler.onDeviceSelected(data);
             } else {
-                connectionView.setClickableEnabled(true);
+                this.statusLayout.setClickable(true);
             }
 
         // Called when returning from enabling Bluetooth
@@ -117,34 +122,32 @@ public class MainActivity extends BaseActivity implements MainView,
     //------------------------------------------------------------------------------
     @Override
     public void setStatusBluetoothNotAvailable() {
-        if (connectionView != null) {
-            this.connectionView.setStatusNotAvailable();
-        }
+        this.statusImage.setImageResource(R.drawable.ic_bluetooth_disabled_black_48dp);
+        this.statusLabel.setText(R.string.status_bluetooth_not_available);
     }
 
     @Override
     public void setStatusBluetoothConnecting() {
-        this.connectionView.setStatusConnecting();
+        this.statusImage.setImageResource(R.drawable.ic_bluetooth_searching_black_48dp);
+        this.statusLabel.setText(R.string.status_connecting_to_device);
     }
 
     @Override
     public void setStatusBluetoothRetry() {
-        this.connectionView.setStatusRetryConnection();
+        this.statusImage.setImageResource(R.drawable.ic_bluetooth_searching_black_48dp);
+        this.statusLabel.setText(R.string.status_rety_connecting_to_device);
     }
 
     @Override
     public void setStatusBluetoothFailed() {
-        this.connectionView.setStatusConnectionFailed();
+        this.statusImage.setImageResource(R.drawable.ic_bluetooth_disabled_black_48dp);
+        this.statusLabel.setText(R.string.status_connection_to_device_failed);
     }
 
     @Override
     public void setStatusBluetoothConnected(String deviceName) {
-        this.connectionView.setStatusConnected(deviceName);
-    }
-
-    @Override
-    public void showConnectionView() {
-        this.replaceFragment(new ConnectionFragment());
+        this.statusImage.setImageResource(R.drawable.ic_bluetooth_connected_black_48dp);
+        this.statusLabel.setText(String.format("Connected to %s!", deviceName));
     }
 
     @Override
@@ -160,34 +163,13 @@ public class MainActivity extends BaseActivity implements MainView,
 
 
     //------------------------------------------------------------------------------
-    // Connection View Event Listener
+    // Utility
     //------------------------------------------------------------------------------
-    @Override
-    public void onConnectBluetoothPressed() {
+    private void onConnectBluetoothPressed() {
         Intent intent = new Intent(getApplicationContext(), DeviceList.class);
         startActivityForResult(intent, BluetoothState.REQUEST_CONNECT_DEVICE);
     }
 
-    @Override
-    public void onConnectionViewCreated(ConnectionViewInterface view) {
-        this.connectionView = view;
-
-    }
-
-    @Override
-    public void onConnectionViewDestroyed() {
-        this.connectionView = null;
-    }
-
-
-    //------------------------------------------------------------------------------
-    // Private Methods
-    //------------------------------------------------------------------------------
-    private void replaceFragment(Fragment fragment) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(mainFrame.getId(), fragment, fragment.getClass().getSimpleName());
-        transaction.commit();
-    }
 
 
 }

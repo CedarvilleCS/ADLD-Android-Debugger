@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+      xmlns:tools="http://schemas.android.com/tools"
+      tools:context="edu.cedarville.adld.module.robot.shared.view.RobotDebuggerActivity">
+
+    <item
+        android:id="@+id/action_pause"
+        android:orderInCategory="100"
+        android:title="@string/action_pause"
+        android:icon="@drawable/ic_pause_white_24dp"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_console"
+        android:orderInCategory="100"
+        android:title="@string/action_show_console"
+        android:icon="@drawable/ic_code_white_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        android:icon="@drawable/ic_settings_white_24dp"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_disconnect"
+        android:orderInCategory="100"
+        android:title="@string/action_disconnect"
+        app:showAsAction="never"/>
+
+</menu>
