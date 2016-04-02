@@ -33,6 +33,15 @@
                 android:value="edu.cedarville.adld.module.main.ui.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".module.setting.view.RobotSettingsActivity"
+            android:label="@string/title_activity_robot_settings"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.cedarville.adld.module.robot.shared.view.RobotDebuggerActivity" />
+        </activity>
+
     </application>
 
 </manifest>

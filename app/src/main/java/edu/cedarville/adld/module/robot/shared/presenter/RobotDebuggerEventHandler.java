@@ -11,5 +11,7 @@ public interface RobotDebuggerEventHandler {
 
     void onPlayPressed();
     void onPausePressed();
+    void onDisconnectPressed();
+    void onSettingsPressed();
 
 }

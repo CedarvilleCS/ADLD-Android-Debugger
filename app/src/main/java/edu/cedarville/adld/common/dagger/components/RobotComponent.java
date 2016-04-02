@@ -4,6 +4,7 @@ import dagger.Subcomponent;
 import edu.cedarville.adld.common.dagger.modules.RobotModule;
 import edu.cedarville.adld.common.dagger.scopes.RobotScope;
 import edu.cedarville.adld.module.robot.shared.view.RobotDebuggerActivity;
+import edu.cedarville.adld.module.setting.view.RobotSettingsActivity;
 
 @RobotScope
 @Subcomponent(
@@ -14,4 +15,5 @@ import edu.cedarville.adld.module.robot.shared.view.RobotDebuggerActivity;
 public interface RobotComponent {
 
     void inject(RobotDebuggerActivity activity);
+    void inject(RobotSettingsActivity activity);
 }

@@ -11,9 +11,9 @@ import edu.cedarville.adld.common.model.ConsoleOutput;
 import edu.cedarville.adld.common.model.Robot;
 import edu.cedarville.adld.common.model.SensorData;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
+import edu.cedarville.adld.common.utility.Navigator;
 import edu.cedarville.adld.module.robot.shared.view.RobotDebuggerView;
 import rx.Subscription;
-import timber.log.Timber;
 
 public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
 
@@ -29,17 +29,28 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
      * Application components for dependency injection
      */
     private final Components components;
+    /**
+     * Utility class which helps start activities
+     */
+    private final Navigator navigator;
 
+
+    //------------------------------------------------------------------------------
+    // Presenter Class Variables
+    //------------------------------------------------------------------------------
     private RobotDebuggerView view;
     private Subscription sensorDataSubscription;
+
+
 
     //------------------------------------------------------------------------------
     // Constructor
     //------------------------------------------------------------------------------
     @Inject
-    public RobotDebuggerPresenter(Robot robot, Components components) {
+    public RobotDebuggerPresenter(Robot robot, Components components, Navigator navigator) {
         this.robot = robot;
         this.components = components;
+        this.navigator = navigator;
     }
 
 
@@ -64,6 +75,7 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
 
     @Override
     public void detachView() {
+        this.robot.disconnect();
         this.view = null;
     }
 
@@ -79,6 +91,16 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
     @Override
     public void onPausePressed() {
         this.stopObservingRobotSensorData();
+    }
+
+    @Override
+    public void onDisconnectPressed() {
+        this.view.dismissView();
+    }
+
+    @Override
+    public void onSettingsPressed() {
+        this.navigator.navigateToRobotSettings(view.getViewContext());
     }
 
 

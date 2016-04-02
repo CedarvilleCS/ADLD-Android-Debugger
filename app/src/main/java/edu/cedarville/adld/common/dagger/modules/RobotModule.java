@@ -6,6 +6,8 @@ import edu.cedarville.adld.common.dagger.scopes.RobotScope;
 import edu.cedarville.adld.common.model.Robot;
 import edu.cedarville.adld.module.robot.shared.presenter.RobotDebuggerEventHandler;
 import edu.cedarville.adld.module.robot.shared.presenter.RobotDebuggerPresenter;
+import edu.cedarville.adld.module.setting.presenter.RobotSettingsEventHandler;
+import edu.cedarville.adld.module.setting.presenter.RobotSettingsPresenter;
 
 @Module
 public class RobotModule {
@@ -23,6 +25,11 @@ public class RobotModule {
 
     @Provides @RobotScope
     public RobotDebuggerEventHandler providesRobotDebuggerEventHandler(RobotDebuggerPresenter presenter) {
+        return presenter;
+    }
+
+    @Provides @RobotScope
+    public RobotSettingsEventHandler providesRobotSettingsEventHandler(RobotSettingsPresenter presenter) {
         return presenter;
     }
 }

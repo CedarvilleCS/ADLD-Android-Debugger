@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -24,7 +22,6 @@ import edu.cedarville.adld.common.dagger.Components;
 import edu.cedarville.adld.module.connection.ConnectionFragment;
 import edu.cedarville.adld.module.connection.ConnectionViewInterface;
 import edu.cedarville.adld.module.main.presenter.MainEventHandler;
-import edu.cedarville.adld.module.setting.SettingsDialogFragment;
 
 public class MainActivity extends BaseActivity implements MainView,
         ConnectionFragment.ConnectionViewEventListener {
@@ -90,27 +87,10 @@ public class MainActivity extends BaseActivity implements MainView,
     }
 
 
+
     //------------------------------------------------------------------------------
-    // Actionbar Menu
+    // Activity Intent Results
     //------------------------------------------------------------------------------
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                new SettingsDialogFragment().show(getSupportFragmentManager(), "Settings");
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Called from Selecting a device from DeviceListActivity
         if(requestCode == BluetoothState.REQUEST_CONNECT_DEVICE) {
