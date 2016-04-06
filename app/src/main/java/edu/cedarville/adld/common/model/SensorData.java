@@ -53,29 +53,15 @@ public class SensorData {
     }
 
 
-
     //------------------------------------------------------------------------------
-    // Formatted Output Methods
+    // Overridden Methods
     //------------------------------------------------------------------------------
-    /**
-     * @return  A string of all sensor values in Hex value "00, AA, FF, 55"
-     */
-    public String getOutputAsHex() {
+    @Override
+    public String toString() {
         return String.format("%s, %s, %s, %s",
-                leftSensorValue.getHexValue(),
-                frontSensorValue.getHexValue(),
-                rightSensorValue.getHexValue(),
-                sonarSensorValue.getHexValue());
-    }
-
-    /**
-     * @return  A string of all sensor values in Integer value "0, 170, 255, 45"
-     */
-    public String getOutputAsIntegers() {
-        return String.format("%d, %d, %d, %d",
-                leftSensorValue.getIntegerValue(),
-                frontSensorValue.getIntegerValue(),
-                rightSensorValue.getIntegerValue(),
-                sonarSensorValue.getIntegerValue());
+                leftSensorValue,
+                frontSensorValue,
+                rightSensorValue,
+                sonarSensorValue);
     }
 }

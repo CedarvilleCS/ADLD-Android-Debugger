@@ -17,7 +17,6 @@ import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.base.BaseActivity;
 import edu.cedarville.adld.common.dagger.Components;
-import edu.cedarville.adld.common.model.ConsoleOutput;
 import edu.cedarville.adld.common.model.SensorData;
 import edu.cedarville.adld.module.robot.chart.ChartFragment;
 import edu.cedarville.adld.module.robot.chart.ChartView;
@@ -239,7 +238,7 @@ public class RobotDebuggerActivity extends BaseActivity implements
     }
 
     @Override
-    public void printOutput(ConsoleOutput output) {
+    public void printOutput(String output) {
         if (consoleView != null) {
             this.consoleView.addConsoleRow(output);
         }
