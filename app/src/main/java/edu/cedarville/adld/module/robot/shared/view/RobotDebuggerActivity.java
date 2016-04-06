@@ -119,6 +119,14 @@ public class RobotDebuggerActivity extends BaseActivity implements
                 this.eventHandler.onPausePressed();
                 return true;
 
+            case R.id.action_disconnect:
+                this.eventHandler.onDisconnectPressed();
+                return true;
+
+            case R.id.action_settings:
+                this.eventHandler.onSettingsPressed();
+                return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -193,5 +201,15 @@ public class RobotDebuggerActivity extends BaseActivity implements
         if (consoleView != null) {
             this.consoleView.addConsoleRow(output);
         }
+    }
+
+    @Override
+    public void dismissView() {
+        this.finish();
+    }
+
+    @Override
+    public Context getViewContext() {
+        return this;
     }
 }

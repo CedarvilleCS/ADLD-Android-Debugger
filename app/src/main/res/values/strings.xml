@@ -21,6 +21,15 @@
     <string name="right_sensor">Right Sensor</string>
     <string name="sonar_sensor">Sonar Sensor</string>
 
+    <string name="robot_name">Robot Name</string>
+    <string name="robot_data">Robot Data</string>
+    <string name="setting_display_hex">Display Hex</string>
+    <string name="setting_display_hex_desc">Display the output values as Hex.</string>
+
+    <string name="setting_threshold">Average Threshold</string>
+    <string name="setting_threshold_desc">Displays the running average of values based on the threshold</string>
+
+
     <string name="running_average">Running Average</string>
     <string name="running_average_desc">Combine n inputs and display the average</string>
     <string name="avg_raw">Raw (plots every point)</string>
@@ -28,6 +37,8 @@
     <string name="avg_10">10 (plots avg of 10 points)</string>
     <string name="avg_100">100 (plots avg of 100 points)</string>
     <string name="display_hex">Display sensor output in Hex</string>
+
     <string name="title_activity_robot_debugger">Robot Debugger</string>
+    <string name="title_activity_robot_settings">Robot Setings</string>
 
 </resources>

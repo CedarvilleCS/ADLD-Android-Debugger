@@ -17,10 +17,18 @@ public class SensorValue {
     private static final int HEX_RADIX = 16;
 
     /**
-     * The actual value emitted by the sensor
+     * The actual value emitted by the sensor as a Hex string
      */
     private final String value;
 
+    /**
+     * The actual value emitted by the sensor as an integer
+     */
+    private final int intValue;
+
+    /**
+     * The type of Sensor
+     */
     private final SensorType type;
 
 
@@ -34,9 +42,15 @@ public class SensorValue {
      */
     public SensorValue(String value, SensorType type) {
         this.value = value.toUpperCase();
+        this.intValue = Integer.parseInt(this.value, HEX_RADIX);
         this.type = type;
     }
 
+    public SensorValue(SensorType type, int intValue) {
+        this.type = type;
+        this.value = String.format("%02X", intValue);
+        this.intValue = intValue;
+    }
 
     //------------------------------------------------------------------------------
     // Accessor Methods
@@ -52,7 +66,7 @@ public class SensorValue {
      * @return  The actual value of the class in 0-255 format.
      */
     public int getIntegerValue() {
-        return Integer.parseInt(this.value, HEX_RADIX);
+        return this.intValue;
     }
 
     /**
