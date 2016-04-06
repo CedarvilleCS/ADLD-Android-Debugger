@@ -174,10 +174,10 @@ public class Robot {
         if (values.length < 4) return;
 
         // Create each Sensor Type
-        SensorValue leftValue = new SensorValue(values[0], SensorType.LEFT);
-        SensorValue frontValue = new SensorValue(values[1], SensorType.FRONT);
-        SensorValue rightValue = new SensorValue(values[2], SensorType.RIGHT);
-        SensorValue sonarValue = new SensorValue(values[3], SensorType.SONAR);
+        SensorValue leftValue = new SensorValue(values[0], displayHex,  SensorType.LEFT);
+        SensorValue frontValue = new SensorValue(values[1], displayHex, SensorType.FRONT);
+        SensorValue rightValue = new SensorValue(values[2], displayHex, SensorType.RIGHT);
+        SensorValue sonarValue = new SensorValue(values[3], displayHex, SensorType.SONAR);
 
         // Emit each value on their respective sensor subject
         this.leftSensor.onNext(leftValue);
@@ -194,28 +194,28 @@ public class Robot {
      * @return  Observable that will emit the SensorValues of the Left Sensor
      */
     public Observable<SensorValue> getLeftSensorObservable() {
-        return this.getManipulatedObservable(leftSensor);
+        return this.getManipulatedObservable(leftSensor, SensorType.LEFT);
     }
 
     /**
      * @return  Observable that will emit the SensorValues of the Front Sensor
      */
     public Observable<SensorValue> getFrontSensorObservable() {
-        return this.getManipulatedObservable(frontSensor);
+        return this.getManipulatedObservable(frontSensor, SensorType.FRONT);
     }
 
     /**
      * @return  Observable that will emit the SensorValues of the Right Sensor
      */
     public Observable<SensorValue> getRightSensorObservable() {
-        return this.getManipulatedObservable(rightSensor);
+        return this.getManipulatedObservable(rightSensor, SensorType.RIGHT);
     }
 
     /**
      * @return  Observable that will emit the SensorValues of the Sonar Sensor
      */
     public Observable<SensorValue> getSonarSensorObservable() {
-        return this.getManipulatedObservable(sonarSensor);
+        return this.getManipulatedObservable(sonarSensor, SensorType.SONAR);
     }
 
     /**
@@ -245,7 +245,7 @@ public class Robot {
     //------------------------------------------------------------------------------
     // RxJava Stream Manipulation
     //------------------------------------------------------------------------------
-    private Observable<SensorValue>  getManipulatedObservable(PublishSubject<SensorValue> subject) {
+    private Observable<SensorValue>  getManipulatedObservable(PublishSubject<SensorValue> subject, final SensorType type) {
         return subject
                 .asObservable()
                 // Turn a SensorValue into an integer value
@@ -269,7 +269,7 @@ public class Robot {
                 }).map(new Func1<Integer, SensorValue>() {
                     @Override
                     public SensorValue call(Integer integer) {
-                        return new SensorValue(SensorType.LEFT, integer);
+                        return new SensorValue(integer, displayHex, type);
                     }
                 });
     }

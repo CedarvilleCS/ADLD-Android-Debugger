@@ -27,6 +27,11 @@ public class SensorValue {
     private final int intValue;
 
     /**
+     * True if {@link #toString()} outputs a Hex value. False will output an Integer
+     */
+    private final boolean displayHex;
+
+    /**
      * The type of Sensor
      */
     private final SensorType type;
@@ -40,16 +45,18 @@ public class SensorValue {
      * @param value Value of the Sensor. Will be turned into all uppercase
      * @param type  {@link SensorType} of the sensor represented.
      */
-    public SensorValue(String value, SensorType type) {
+    public SensorValue(String value, boolean displayHex, SensorType type) {
         this.value = value.toUpperCase();
+        this.displayHex = displayHex;
         this.intValue = Integer.parseInt(this.value, HEX_RADIX);
         this.type = type;
     }
 
-    public SensorValue(SensorType type, int intValue) {
-        this.type = type;
+    public SensorValue(int intValue, boolean displayHex, SensorType type) {
         this.value = String.format("%02X", intValue);
+        this.displayHex = displayHex;
         this.intValue = intValue;
+        this.type = type;
     }
 
     //------------------------------------------------------------------------------
@@ -74,5 +81,14 @@ public class SensorValue {
      */
     public SensorType getType() {
         return type;
+    }
+
+
+    //------------------------------------------------------------------------------
+    // Overridden Methods
+    //------------------------------------------------------------------------------
+    @Override
+    public String toString() {
+        return displayHex ? value : Integer.toString(intValue);
     }
 }

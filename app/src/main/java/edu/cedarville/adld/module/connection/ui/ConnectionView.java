@@ -1,9 +1,9 @@
-package edu.cedarville.adld.module.main.ui;
+package edu.cedarville.adld.module.connection.ui;
 
 import android.content.Context;
 import android.content.Intent;
 
-public interface MainView {
+public interface ConnectionView {
 
     void setStatusBluetoothNotAvailable();
     void setStatusBluetoothConnecting();
@@ -12,7 +12,6 @@ public interface MainView {
     void setStatusBluetoothConnected(String deviceName);
 
     void startIntentForResult(Intent intent, int requestCode);
-    void showConnectionView();
 
     Context getViewContext();
 

@@ -18,13 +18,17 @@ import edu.cedarville.adld.R;
 import edu.cedarville.adld.common.base.BaseActivity;
 import edu.cedarville.adld.common.dagger.Components;
 import edu.cedarville.adld.common.model.ConsoleOutput;
+import edu.cedarville.adld.common.model.SensorData;
+import edu.cedarville.adld.module.robot.chart.ChartFragment;
+import edu.cedarville.adld.module.robot.chart.ChartView;
 import edu.cedarville.adld.module.robot.console.ConsoleFragment;
 import edu.cedarville.adld.module.robot.console.ConsoleView;
 import edu.cedarville.adld.module.robot.shared.presenter.RobotDebuggerEventHandler;
 
 public class RobotDebuggerActivity extends BaseActivity implements
         RobotDebuggerView,
-        ConsoleFragment.ConsoleFragmentInteractionListener {
+        ConsoleFragment.ConsoleFragmentInteractionListener,
+        ChartFragment.ChartFragmentInteractionListener {
 
     //------------------------------------------------------------------------------
     // Activity Intent Factory
@@ -54,10 +58,19 @@ public class RobotDebuggerActivity extends BaseActivity implements
     //------------------------------------------------------------------------------
     // Variables
     //------------------------------------------------------------------------------
-    /** Interface allowing access to modify the Console Fragment */
+    /**
+     * Interface allowing access to modify the Console Fragment
+     */
     private ConsoleView consoleView;
 
-    /** Boolean flag tracking if output is being displayed or not */
+    /**
+     * Interface allowing access to modify the Chart Fragment
+     */
+    private ChartView chartView;
+
+    /**
+     * Boolean flag tracking if output is being displayed or not
+     */
     private boolean isPlaying;
 
 
@@ -103,7 +116,13 @@ public class RobotDebuggerActivity extends BaseActivity implements
     //------------------------------------------------------------------------------
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(isPlaying ? R.menu.menu_pause : R.menu.menu_play, menu);
+        int menuId;
+        if (consoleView == null) {
+            menuId = isPlaying ? R.menu.menu_pause_chart: R.menu.menu_play_chart;
+        } else {
+            menuId = isPlaying ? R.menu.menu_pause_console : R.menu.menu_play_console;
+        }
+        getMenuInflater().inflate(menuId, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -117,6 +136,14 @@ public class RobotDebuggerActivity extends BaseActivity implements
 
             case R.id.action_pause:
                 this.eventHandler.onPausePressed();
+                return true;
+
+            case R.id.action_chart:
+                this.eventHandler.onChartPressed();
+                return true;
+
+            case R.id.action_console:
+                this.eventHandler.onConsolePressed();
                 return true;
 
             case R.id.action_disconnect:
@@ -146,13 +173,12 @@ public class RobotDebuggerActivity extends BaseActivity implements
     // Fragment Handling
     //------------------------------------------------------------------------------
     private void showConsoleFragment() {
-        ConsoleFragment fragment = ConsoleFragment.instance();
-        this.replaceFragment(fragment);
+        this.replaceFragment(ConsoleFragment.instance());
     }
 
 
     private void showChartFragment() {
-
+        this.replaceFragment(ChartFragment.instance());
     }
 
 
@@ -169,11 +195,27 @@ public class RobotDebuggerActivity extends BaseActivity implements
     @Override
     public void onConsoleViewCreated(ConsoleView consoleView) {
         this.consoleView = consoleView;
+        this.invalidateOptionsMenu();
     }
 
     @Override
     public void onConsoleViewDestroyed() {
         this.consoleView = null;
+    }
+
+
+    //------------------------------------------------------------------------------
+    // Chart Fragment Interaction Listener
+    //------------------------------------------------------------------------------
+    @Override
+    public void onChartViewCreated(ChartView view) {
+        this.chartView = view;
+        this.invalidateOptionsMenu();
+    }
+
+    @Override
+    public void onChartViewDestroyed() {
+        this.chartView = null;
     }
 
 
@@ -200,6 +242,13 @@ public class RobotDebuggerActivity extends BaseActivity implements
     public void printOutput(ConsoleOutput output) {
         if (consoleView != null) {
             this.consoleView.addConsoleRow(output);
+        }
+    }
+
+    @Override
+    public void showSensorData(SensorData data) {
+        if (chartView != null) {
+            this.chartView.showSensorData(data);
         }
     }
 

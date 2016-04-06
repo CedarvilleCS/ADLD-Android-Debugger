@@ -8,6 +8,8 @@
     <string name="action_disconnect">Disconnect</string>
     <string name="action_play">Play</string>
     <string name="action_pause">Pause</string>
+    <string name="action_show_chart">Chart View</string>
+    <string name="action_show_console">Console View</string>
 
     <string name="status_rety_connecting_to_device">Connection failed. Attempting to try again…</string>
     <string name="status_connect_to_bluetooth">Select Bluetooth Device</string>
@@ -38,7 +40,7 @@
     <string name="avg_100">100 (plots avg of 100 points)</string>
     <string name="display_hex">Display sensor output in Hex</string>
 
-    <string name="title_activity_robot_debugger">Robot Debugger</string>
-    <string name="title_activity_robot_settings">Robot Setings</string>
+    <string name="title_activity_robot_debugger">Robot</string>
+    <string name="title_activity_robot_settings">Settings</string>
 
 </resources>

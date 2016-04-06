@@ -4,7 +4,7 @@ import dagger.Component;
 import edu.cedarville.adld.common.dagger.modules.AppModule;
 import edu.cedarville.adld.common.dagger.modules.RobotModule;
 import edu.cedarville.adld.common.dagger.scopes.AppScope;
-import edu.cedarville.adld.module.main.ui.MainActivity;
+import edu.cedarville.adld.module.connection.ui.ConnectionActivity;
 
 @AppScope
 @Component(
@@ -17,7 +17,7 @@ public interface AppComponent {
     //------------------------------------------------------------------------------
     // Injection Methods
     //------------------------------------------------------------------------------
-    void inject(MainActivity activity);
+    void inject(ConnectionActivity activity);
 
 
     //------------------------------------------------------------------------------

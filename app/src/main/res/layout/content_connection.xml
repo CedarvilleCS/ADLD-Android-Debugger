@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/layout_bluetooth_status"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <edu.cedarville.adld.common.view.TintedImageView
+        android:id="@+id/img_bluetooth_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:src="@drawable/ic_bluetooth_black_48dp"/>
+
+    <TextView
+        android:id="@+id/label_bluetooth_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/status_connect_to_bluetooth"/>
+
+</LinearLayout>
+

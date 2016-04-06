@@ -1,4 +1,4 @@
-package edu.cedarville.adld.module.main.presenter;
+package edu.cedarville.adld.module.connection.presenter;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
@@ -14,11 +14,11 @@ import app.akexorcist.bluetotohspp.library.BluetoothState;
 import edu.cedarville.adld.common.model.Robot;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
 import edu.cedarville.adld.common.utility.Navigator;
-import edu.cedarville.adld.module.main.ui.MainView;
+import edu.cedarville.adld.module.connection.ui.ConnectionView;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 
-public class MainPresenter implements MainEventHandler {
+public class ConnectionPresenter implements ConnectionEventHandler {
 
 
     //------------------------------------------------------------------------------
@@ -32,11 +32,11 @@ public class MainPresenter implements MainEventHandler {
     // Variables
     //------------------------------------------------------------------------------
     private Intent connectionData;
-    private MainView view;
+    private ConnectionView view;
 
 
     @Inject
-    public MainPresenter(Context context, Navigator navigator) {
+    public ConnectionPresenter(Context context, Navigator navigator) {
         this.navigator = navigator;
         this.bt = new BluetoothSPP(context);
         this.bt.setBluetoothConnectionListener(new ConnectionListener());
@@ -48,7 +48,7 @@ public class MainPresenter implements MainEventHandler {
     // Main Event Handler Interface
     //------------------------------------------------------------------------------
     @Override
-    public void attachView(MainView view) {
+    public void attachView(ConnectionView view) {
         this.view = view;
     }
 
@@ -113,7 +113,6 @@ public class MainPresenter implements MainEventHandler {
 
         @Override
         public void onDeviceDisconnected() {
-            view.showConnectionView();
             Toast.makeText(view.getViewContext(), "Device Disconnected!", Toast.LENGTH_SHORT).show();
         }
 
