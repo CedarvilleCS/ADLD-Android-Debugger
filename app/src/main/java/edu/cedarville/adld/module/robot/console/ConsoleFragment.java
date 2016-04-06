@@ -16,8 +16,6 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import edu.cedarville.adld.R;
-import edu.cedarville.adld.common.model.ConsoleOutput;
-import timber.log.Timber;
 
 /**
  * ConsoleFragment.java
@@ -62,9 +60,9 @@ public class ConsoleFragment extends Fragment implements ConsoleView {
     /** Listener notified of fragment events */
     private ConsoleFragmentInteractionListener mListener;
     /** List containing console output models */
-    private List<ConsoleOutput> outputsList;
+    private List<String> outputsList;
     /** Adapter which will provide the backing data for the ListView */
-    private ArrayAdapter<ConsoleOutput> consoleAdapter;
+    private ArrayAdapter<String> consoleAdapter;
 
 
 
@@ -118,7 +116,7 @@ public class ConsoleFragment extends Fragment implements ConsoleView {
      * @param output    Output to be displayed
      */
     @Override
-    public void addConsoleRow(ConsoleOutput output) {
+    public void addConsoleRow(String output) {
         this.outputsList.add(output);
         this.consoleAdapter.notifyDataSetChanged();
     }

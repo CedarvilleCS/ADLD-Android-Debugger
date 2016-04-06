@@ -11,11 +11,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import edu.cedarville.adld.R;
-import edu.cedarville.adld.common.model.SensorActivation;
 import edu.cedarville.adld.common.model.SensorData;
-import edu.cedarville.adld.common.model.SensorType;
-import rx.Observable;
-import rx.subjects.BehaviorSubject;
 
 public class DataPointSquaresView extends LinearLayout {
 
@@ -43,11 +39,6 @@ public class DataPointSquaresView extends LinearLayout {
     View squareSonar;
 
 
-    //------------------------------------------------------------------------------
-    // View Variables
-    //------------------------------------------------------------------------------
-    private BehaviorSubject<SensorActivation> sensorActiveSubject;
-
 
     //------------------------------------------------------------------------------
     // View Allocation
@@ -56,8 +47,6 @@ public class DataPointSquaresView extends LinearLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.data_point_square_view, this, true);
         ButterKnife.bind(this);
-
-        this.sensorActiveSubject = BehaviorSubject.create();
     }
 
 
@@ -66,22 +55,22 @@ public class DataPointSquaresView extends LinearLayout {
     //------------------------------------------------------------------------------
     @OnClick (R.id.square_left_sensor)
     void onLeftSensorClicked() {
-        this.notifyListenerOfClick(squareLeft, SensorType.LEFT);
+        this.handleViewClick(squareLeft);
     }
 
     @OnClick (R.id.square_front_sensor)
     void onFrontSensorClicked() {
-        this.notifyListenerOfClick(squareFront, SensorType.FRONT);
+        this.handleViewClick(squareFront);
     }
 
     @OnClick (R.id.square_right_sensor)
     void onRightSensorClicked() {
-        this.notifyListenerOfClick(squareRight, SensorType.RIGHT);
+        this.handleViewClick(squareRight);
     }
 
     @OnClick (R.id.square_sonar_sensor)
     void onSonarSensorClicked() {
-        this.notifyListenerOfClick(squareSonar, SensorType.SONAR);
+        this.handleViewClick(squareSonar);
     }
 
 
@@ -99,13 +88,6 @@ public class DataPointSquaresView extends LinearLayout {
         this.frontSensor.setText(data.getFrontSensorValue().toString());
         this.rightSensor.setText(data.getRightSensorValue().toString());
         this.sonarSensor.setText(data.getSonarSensorValue().toString());
-    }
-
-    /**
-     * @return An Observable that emits when a Sensor has been activated or deactivated
-     */
-    public Observable<SensorActivation> getActivationObservable() {
-        return sensorActiveSubject.asObservable();
     }
 
     public boolean isLeftSensorActive() {
@@ -134,19 +116,7 @@ public class DataPointSquaresView extends LinearLayout {
     //------------------------------------------------------------------------------
     // Utility Methods
     //------------------------------------------------------------------------------
-
-    /**
-     * Generates an object to be emitted to notify of a Sensor becoming Active or Inactive
-     *
-     * @param view View which was toggled
-     * @param type Type of sensor that was toggled
-     */
-    private void notifyListenerOfClick(View view, SensorType type) {
-        boolean selected = view.isSelected();
-        view.setSelected(!selected);
-
-        SensorActivation activation = new SensorActivation(type, !selected);
-        this.sensorActiveSubject.onNext(activation);
-
+    private void handleViewClick(View view) {
+        view.setSelected(!view.isSelected());
     }
 }

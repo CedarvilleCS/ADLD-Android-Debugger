@@ -6,8 +6,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 import javax.inject.Inject;
 
-import edu.cedarville.adld.common.dagger.Components;
-import edu.cedarville.adld.common.model.ConsoleOutput;
 import edu.cedarville.adld.common.model.Robot;
 import edu.cedarville.adld.common.model.SensorData;
 import edu.cedarville.adld.common.rx.OnNextSubscriber;
@@ -25,10 +23,6 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
      * Robot model which will be emitting sensor data
      */
     private final Robot robot;
-    /**
-     * Application components for dependency injection
-     */
-    private final Components components;
     /**
      * Utility class which helps start activities
      */
@@ -57,9 +51,8 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
     // Constructor
     //------------------------------------------------------------------------------
     @Inject
-    public RobotDebuggerPresenter(Robot robot, Components components, Navigator navigator) {
+    public RobotDebuggerPresenter(Robot robot, Navigator navigator) {
         this.robot = robot;
-        this.components = components;
         this.navigator = navigator;
     }
 
@@ -138,7 +131,7 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
                             if (outputToChart) {
                                 view.showSensorData(sensorData);
                             } else {
-                                view.printOutput(new ConsoleOutput(sensorData.getOutputAsHex()));
+                                view.printOutput(sensorData.toString());
                             }
 
                         }
@@ -186,7 +179,7 @@ public class RobotDebuggerPresenter implements RobotDebuggerEventHandler {
         DateTime now = new DateTime();
         DateTimeFormatter fmt = DateTimeFormat.fullTime();
         String res = String.format((isObservingRobotSensorData() ? "PLAY " : "PAUSE") + "\n%s" , now.toString(fmt));
-        this.view.printOutput(new ConsoleOutput(res));
+        this.view.printOutput(res);
     }
 
     /**
