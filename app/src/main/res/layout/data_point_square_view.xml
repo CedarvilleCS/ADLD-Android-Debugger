@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_horizontal"
+              android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/square_left_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_sensor_left"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/left_sensor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/label_left_sensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="234"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+
+        <LinearLayout
+            android:id="@+id/square_front_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_sensor_front"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/front_sensor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/label_front_sensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="234"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/square_sonar_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/background_sensor_sonar"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/sonar_sensor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/label_sonar_sensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="234"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <LinearLayout
+            android:id="@+id/square_right_sensor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_sensor_right"
+            android:clickable="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="12dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:text="@string/right_sensor"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/label_right_sensor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="234"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
+

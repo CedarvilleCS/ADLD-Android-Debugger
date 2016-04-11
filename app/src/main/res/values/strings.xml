@@ -1,4 +1,46 @@
 <resources>
     <string name="app_name">ADLD Debugger</string>
+
+    <string name="btn_done">Done</string>
+
     <string name="action_settings">Settings</string>
+    <string name="action_connect">Connect</string>
+    <string name="action_disconnect">Disconnect</string>
+    <string name="action_play">Play</string>
+    <string name="action_pause">Pause</string>
+    <string name="action_show_chart">Chart View</string>
+    <string name="action_show_console">Console View</string>
+
+    <string name="status_rety_connecting_to_device">Connection failed. Attempting to try again…</string>
+    <string name="status_connect_to_bluetooth">Select Bluetooth Device</string>
+    <string name="status_connecting_to_device">Connecting to Device…</string>
+    <string name="status_connected_to_device">Device Connected!</string>
+    <string name="status_connection_to_device_failed">Connection to Device Failed</string>
+    <string name="status_bluetooth_not_available">Bluetooth is not available on this device</string>
+    
+    <string name="left_sensor">Left Sensor</string>
+    <string name="front_sensor">Front Sensor</string>
+    <string name="right_sensor">Right Sensor</string>
+    <string name="sonar_sensor">Sonar Sensor</string>
+
+    <string name="robot_name">Robot Name</string>
+    <string name="robot_data">Robot Data</string>
+    <string name="setting_display_hex">Display Hex</string>
+    <string name="setting_display_hex_desc">Display the output values as Hex.</string>
+
+    <string name="setting_threshold">Average Threshold</string>
+    <string name="setting_threshold_desc">Displays the running average of values based on the threshold</string>
+
+
+    <string name="running_average">Running Average</string>
+    <string name="running_average_desc">Combine n inputs and display the average</string>
+    <string name="avg_raw">Raw (plots every point)</string>
+    <string name="avg_5">5 (plots avg of 5 points)</string>
+    <string name="avg_10">10 (plots avg of 10 points)</string>
+    <string name="avg_100">100 (plots avg of 100 points)</string>
+    <string name="display_hex">Display sensor output in Hex</string>
+
+    <string name="title_activity_robot_debugger">Robot</string>
+    <string name="title_activity_robot_settings">Settings</string>
+
 </resources>

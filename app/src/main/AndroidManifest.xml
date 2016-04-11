@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="edu.cedarville.adld" >
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
     <application
         android:name=".common.ADLDDebuggerApplication"
         android:allowBackup="true"
@@ -10,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".MainActivity"
+            android:name=".module.connection.ui.ConnectionActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
             <intent-filter>
@@ -19,6 +22,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".module.robot.shared.view.RobotDebuggerActivity"
+            android:label="@string/title_activity_robot_debugger"
+            android:parentActivityName=".module.connection.ui.ConnectionActivity"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".module.connection.ui.ConnectionActivity" />
+        </activity>
+
+        <activity
+            android:name=".module.setting.view.RobotSettingsActivity"
+            android:label="@string/title_activity_robot_settings"
+            android:theme="@style/AppTheme.NoActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="edu.cedarville.adld.module.robot.shared.view.RobotDebuggerActivity" />
+        </activity>
+
     </application>
 
 </manifest>
